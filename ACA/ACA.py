@@ -2,7 +2,7 @@ from typing import List, Tuple
 from scipy import spatial
 import numpy as np
 import matplotlib.pyplot as plt
-from sko.SA import SA_TSP
+from sko.ACA import ACA_TSP
 import time
 
 DISTANCE_MATRIX = np.zeros
@@ -18,24 +18,26 @@ def cal_total_distance(routine):
         ]
     )
 
+"""
+aca = ACA_TSP(func=cal_total_distance, n_dim=num_points,
+              size_pop=50, max_iter=200,
+              distance_matrix=distance_matrix)"""
 
-def run_SA(
-    coordinates: np.array, iterations: int, t_max: int, t_min: int
-) -> Tuple[float, Tuple[List]]:
+def run_ACA(
+    coordinates: np.array, iterations: int, population:int
+):
     """
-    Run Simulated Annealing on a set of coords and their distance matrix.
+    Run Ant Colony Optimisation Algorithm on a set of coords and their distance matrix.
 
     Parameters
     ----------
     coordinates : np.array
-                A numpy array of coordinates. Expecting coordinates in the form that is produced
+                    A numpy array of coordinates. Expecting coordinates in the form that is produced
                 by the attention module. (3D array)
     iterations : int
-                Number of iterations for SA
-    t_max : int
-            Temperature to being SA at.
-    t_min : int
-            Cut-off point for temperature
+        Max number of iterations for ACA
+    population : int
+        Number of ants
 
     Returns
     -------
@@ -44,24 +46,22 @@ def run_SA(
     best_points : List[int]
         The best order of nodes follow
     """
-
     global DISTANCE_MATRIX
     DISTANCE_MATRIX = spatial.distance.cdist(
         coordinates[0], coordinates[0], metric="euclidean"
     )
 
-    # Initialise SA, using euclidean distance as objective function
-    sa_tsp = SA_TSP(
-        func=cal_total_distance,
-        x0=range(len(coordinates[0])),
-        T_max=t_max,
-        T_min=t_min,
-        L=iterations,
+    # initialise ACA, using euclidean distance as objective function
+    aca_tsp = ACA_TSP(
+        func = cal_total_distance,
+        n_dim = len(coordinates[0]),
+        size_pop=population,
+        max_iter = iterations,
+        distance_matrix=DISTANCE_MATRIX
     )
 
-    # Run SA and report total time as well as final distance
     start_time = time.time()
-    best_points, best_distance = sa_tsp.run()
+    best_points, best_distance = aca_tsp.run()
 
     # print("--- %s seconds ---" % (time.time() - start_time))
     time_taken = (time.time() - start_time)
