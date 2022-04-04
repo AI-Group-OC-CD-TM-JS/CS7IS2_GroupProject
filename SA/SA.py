@@ -65,4 +65,6 @@ def run_SA(
     # print("--- %s seconds ---" % (time.time() - start_time))
     time_taken = time.time() - start_time
 
-    return best_distance, best_points, time_taken
+    best_history = sa_tsp.best_y_history
+
+    return best_distance, best_points, time_taken, best_history
