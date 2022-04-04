@@ -62,11 +62,7 @@ def run_SA(
     start_time = time.time()
     best_points, best_distance = sa_tsp.run()
 
-<<<<<<< HEAD
-    return best_distance, best_points, (time.time() - start_time)
-=======
     # print("--- %s seconds ---" % (time.time() - start_time))
-    time_taken = (time.time() - start_time)
+    time_taken = time.time() - start_time
 
     return best_distance, best_points, time_taken
->>>>>>> f21eb8c7a9ffdbf98f5844cf471cbdb69bfcf7e2
