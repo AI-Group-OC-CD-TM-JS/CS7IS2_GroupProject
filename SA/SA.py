@@ -9,7 +9,6 @@ DISTANCE_MATRIX = np.zeros
 
 
 def cal_total_distance(routine):
-    """Get the total distance between all nodes"""
     (num_points,) = routine.shape
     return sum(
         [
@@ -21,7 +20,7 @@ def cal_total_distance(routine):
 
 def run_SA(
     coordinates: np.array, iterations: int, t_max: int, t_min: int
-) -> Tuple[float, Tuple[List]]:
+) -> Tuple[float, Tuple[List], float]:
     """
     Run Simulated Annealing on a set of coords and their distance matrix.
 
@@ -63,6 +62,4 @@ def run_SA(
     start_time = time.time()
     best_points, best_distance = sa_tsp.run()
 
-    print("--- %s seconds ---" % (time.time() - start_time))
-
-    return best_distance, best_points
+    return best_distance, best_points, (time.time() - start_time)
