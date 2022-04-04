@@ -63,6 +63,7 @@ def run_ACA(
     start_time = time.time()
     best_points, best_distance = aca_tsp.run()
 
-    print("--- %s seconds ---" % (time.time() - start_time))
+    # print("--- %s seconds ---" % (time.time() - start_time))
+    time_taken = (time.time() - start_time)
 
-    return best_distance, best_points
+    return best_distance, best_points, time_taken
