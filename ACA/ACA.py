@@ -24,7 +24,7 @@ aca = ACA_TSP(func=cal_total_distance, n_dim=num_points,
               distance_matrix=distance_matrix)"""
 
 def run_ACA(
-    coordinates: np.array, iterations: int, population:int
+    coordinates: np.array, iterations: int, population:int, alpha:float, beta:float, rho:float
 ):
     """
     Run Ant Colony Optimisation Algorithm on a set of coords and their distance matrix.
@@ -38,6 +38,12 @@ def run_ACA(
         Max number of iterations for ACA
     population : int
         Number of ants
+    alpha : float
+        "Pheromone importance"
+    beta : float
+        "The importance of fitness"
+    rho : float
+        "Pheromone volatilization rate"
 
     Returns
     -------
@@ -45,6 +51,8 @@ def run_ACA(
         The best distance found
     best_points : List[int]
         The best order of nodes follow
+    time_taken : float
+        time taken to produce solution
     """
     global DISTANCE_MATRIX
     DISTANCE_MATRIX = spatial.distance.cdist(
@@ -57,7 +65,10 @@ def run_ACA(
         n_dim = len(coordinates[0]),
         size_pop=population,
         max_iter = iterations,
-        distance_matrix=DISTANCE_MATRIX
+        distance_matrix=DISTANCE_MATRIX,
+        alpha=alpha,
+        beta = beta,
+        rho=rho
     )
 
     start_time = time.time()
