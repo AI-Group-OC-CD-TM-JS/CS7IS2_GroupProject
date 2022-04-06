@@ -3,6 +3,12 @@ Group Project for Artificial Intelligence CS7IS2
 
 In this project we are comparing the performance of Simulated Annealing, Ant Colony Optimisation and a more modern Graph Neural Network, in their solutions to a 20 node TSP.
 
+**Team Members:**
+- Conor "Boner" Dalton
+- Oscar Crowley
+- Johnny Scanlon
+- Tom Mulligan
+
 ## Setup and Installation
 
 ### Python
