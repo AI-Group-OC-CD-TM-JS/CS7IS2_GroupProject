@@ -46,56 +46,57 @@ def make_oracle(model, xy, temperature=1.0):
     return oracle
 
 def run_ALR(coordinates: np.array, temperature: float):
-    all_dataset_results = []
-    for dataset in range(coordinates.shape[0]):
-        xy = coordinates[dataset, :, :]
-        num_nodes = xy.shape[0]
-        if num_nodes == 100:
-            pretrained_file = 'ALR/pretrained/tsp_100/'
-        elif num_nodes == 50:
-            pretrained_file = 'ALR/pretrained/tsp_50/'
-        elif num_nodes == 20:
-            pretrained_file = 'ALR/pretrained/tsp_20/'
+    # all_dataset_results = []
+    
+    xy = coordinates[0, :, :]
+    num_nodes = xy.shape[0]
+    if num_nodes == 100:
+        pretrained_file = 'ALR/pretrained/tsp_100/'
+    elif num_nodes == 50:
+        pretrained_file = 'ALR/pretrained/tsp_50/'
+    elif num_nodes == 20:
+        pretrained_file = 'ALR/pretrained/tsp_20/'
+    else:
+        print(f"ERROR NUM NODES:\t{num_nodes}")
+        return -1
+
+    from ALR.utils.functions import load_model
+    model, _ = load_model(pretrained_file)
+    model.eval()  # Put in evaluation mode to not track gradients
+
+    oracle = make_oracle(model, xy, temperature=temperature)
+
+    sample = False
+    tour = []
+    tour_p = []
+    start_time = time.time()
+    while(len(tour) < len(xy)):
+        p = oracle(tour)
+        
+        
+        if sample:
+            # Advertising the Gumbel-Max trick
+            g = -np.log(-np.log(np.random.rand(*p.shape)))
+            i = np.argmax(np.log(p) + g)
+            # i = np.random.multinomial(1, p)
         else:
-            print(f"ERROR NUM NODES:\t{num_nodes}")
-            return -1
-
-        from ALR.utils.functions import load_model
-        model, _ = load_model(pretrained_file)
-        model.eval()  # Put in evaluation mode to not track gradients
-
-        oracle = make_oracle(model, xy, temperature=temperature)
-
-        sample = False
-        tour = []
-        tour_p = []
-        start_time = time.time()
-        while(len(tour) < len(xy)):
-            p = oracle(tour)
-            
-            
-            if sample:
-                # Advertising the Gumbel-Max trick
-                g = -np.log(-np.log(np.random.rand(*p.shape)))
-                i = np.argmax(np.log(p) + g)
-                # i = np.random.multinomial(1, p)
-            else:
-                # Greedy
-                i = np.argmax(p)
-            tour.append(i)
-            tour_p.append(p)
+            # Greedy
+            i = np.argmax(p)
+        tour.append(i)
+        tour_p.append(p)
+    
+    end_time = time.time()
+    time_taken = end_time - start_time
+    
+    total_distance = 0
+    for node_index in range(num_nodes):
+        # print(f"Current:\t{tour[node_index]}\tNext:\t{tour[(node_index+1)%num_nodes]}")
+        curr_node = xy[tour[node_index], :]
+        next_node = xy[tour[(node_index+1)%num_nodes], :]
+        distance = np.sqrt((curr_node[0] - next_node[0])**2 + (curr_node[1] - next_node[1])**2)
+        total_distance = total_distance + distance
         
-        end_time = time.time()
-        time_taken = end_time - start_time
-        
-        total_distance = 0
-        for node_index in range(num_nodes):
-            curr_node = xy[tour[node_index], :]
-            next_node = xy[tour[(node_index+1)%num_nodes], :]
-            distance = np.sqrt((curr_node[0] - next_node[0])**2 + (curr_node[1] - next_node[1])**2)
-            total_distance = total_distance + distance
-            
-        all_dataset_results.append((total_distance, tour, time_taken))
+    # all_dataset_results.append((total_distance, tour, time_taken))
             
         
     
