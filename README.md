@@ -17,3 +17,8 @@ To install all dependencies, `pip install -r requirements.dev.txt`.
 
 ### Attention Learn To Route
 Credit To: Wouter Kool and Herke van Hoof and Max Welling
+
+## Group Orgaisation
+Facebook Messenger was used as our form of commuication and management since each of our team members are well aquainted.
+Google Drive was also used to lay out a framework of what each team member was assigned to. We also kept links for useful information with this drive:
+https://drive.google.com/drive/folders/1g7EgR53BEMU_LqbIeIdeR_0yhk9x951e?usp=sharing
